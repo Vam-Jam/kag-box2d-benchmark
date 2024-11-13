@@ -21,50 +21,52 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params) {
 }
 
 void onRender(CRules@ this) {
-    if (!ImGui::Begin("Benchmark Menu")) {
+    if (!ImGui::Begin("Map Loader")) {
         ImGui::End();
         return;
     }
 
-    ImGui::TextColored(SColor(255, 243, 48, 48),"Simple Benchmarks");
-    ImGui::Separator();
-    if (ImGui::Button("Raining Kegs (Empty)")) {
-        SendLoadNextMap("raining_kegs");
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Ladders")) {
-        SendLoadNextMap("ladders");
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Doors")) {
-        SendLoadNextMap("doors");
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Spikes (Dirt)")) {
-        SendLoadNextMap("spikes_dirt");
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Spikes (Stone)")) {
-        SendLoadNextMap("spikes_stone");
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Tile Body")) {
-        SendLoadNextMap("tiles_bedrock");
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Get Blobs")) {
-        SendLoadNextMap("getBlobsAt");
-    }
 
+    ImGui::TextColored(SColor(255, 243, 48, 48),"Stress test");
+    ImGui::Separator();
+    AddMap("Raining Kegs", "raining_kegs");
+    AddMap("Ladders", "ladders");
+    AddMap("Doors", "doors");
+    AddMap("Dirt Spikes", "spikes_dirt");
+    AddMap("Stone Spikes", "spikes_stone");
+    AddMap("Tiles", "tiles_bedrock");
+    AddMap("Overlaps", "overlaps");
 
     ImGui::Separator();
-    ImGui::TextColored(SColor(255, 100, 255, 50), "Dev Maps");
+    ImGui::TextColored(SColor(255, 100, 255, 50), "Test Maps");
     ImGui::Separator();
-    if (ImGui::Button("Basic")) {
-        SendLoadNextMap("basic");
+    AddMap("Basic", "basic");
+    AddMap("Water Test", "water_test");
+    AddMap("Jump Spam", "jump_spam");
+
+    ImGui::End();
+
+    if (!ImGui::Begin("Debug Stats")) {
+        ImGui::End();
+        return;
+    }
+    ImGui::TextColored(SColor(255, 243, 48, 48),"Engine Stats");
+    
+    ImGui::TextColored(SColor(255, 243, 48, 48),"Other Crap");
+    ImGui::Separator();
+    Vec2f pos = Vec2f_zero;
+    if (getControls() != null) {
+        pos = getControls().getMouseWorldPos();
+    }
+    ImGui::Text("Mouse Pos: " + pos.x + "," + pos.y);
+
+    ImGui::End();
+
+    if (!ImGui::Begin("Test Menu")) {
+        ImGui::End();
+        return;
     }
 
-    ImGui::Separator();
     ImGui::TextColored(SColor(255, 50, 100, 255), "Settings");
     ImGui::Separator();
     
@@ -88,17 +90,12 @@ void onRender(CRules@ this) {
     this.set_f32("explosion_strength", ImGui::SliderFloat("Strength", this.get_f32("explosion_strength"), -100.0f, 100.0f));
 
     ImGui::End();
+}
 
 
-    if (!ImGui::Begin("Debug")) {
-        ImGui::End();
-        return;
+void AddMap(string &in text, string &in map_name) {
+    ImGui::SameLine();
+    if (ImGui::Button(text)) {
+        SendLoadNextMap(map_name);
     }
-
-    ImGui::Text("New overlapping shapes: " + getMap().get_u32("OVERLAPPING_BLOBS_STARTED"));
-    ImGui::Text("End overlapping shapes: " + getMap().get_u32("OVERLAPPING_BLOBS_ENDED"));
-    ImGui::Text("Active proximity shapes: " + getMap().get_s32("ACTIVE_BLOBS"));
-    ImGui::Text("Sleeping proximity shapes: " + getMap().get_s32("SLEEP_BLOBS"));
-
-    ImGui::End();
 }
