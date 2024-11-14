@@ -43,6 +43,7 @@ void onRender(CRules@ this) {
     AddMap("Basic", "basic");
     AddMap("Water Test", "water_test");
     AddMap("Jump Spam", "jump_spam");
+    AddMap("Wall Slide", "wall_check");
 
     ImGui::End();
 
